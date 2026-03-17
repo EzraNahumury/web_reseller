@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ResellerTable from "@/components/ResellerTable";
+import ResellerStatusChart from "@/components/ResellerStatusChart";
+import ResellerJenisChart from "@/components/ResellerJenisChart";
 import EditModal from "@/components/EditModal";
 import AdminMenuForm from "@/components/AdminMenuForm";
 import BenefitManager from "@/components/BenefitManager";
@@ -351,7 +353,7 @@ export default function DashboardPage() {
         ) : null}
 
         {activeMenu === "data-reseller" ? (
-          <div id="data-reseller">
+          <div id="data-reseller" className="space-y-6">
             <ResellerTable
               resellers={resellers}
               isLoading={isLoading}
@@ -359,6 +361,8 @@ export default function DashboardPage() {
               onEdit={setSelectedReseller}
               onDelete={handleDelete}
             />
+            <ResellerStatusChart resellers={resellers} />
+            <ResellerJenisChart resellers={resellers} />
           </div>
         ) : (
           <div className="space-y-6">
@@ -420,3 +424,5 @@ export default function DashboardPage() {
     </main>
   );
 }
+
+
