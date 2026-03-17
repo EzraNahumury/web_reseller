@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web Admin Reseller (Next.js + Google Sheets API)
 
-## Getting Started
+Dashboard admin reseller dengan alur:
 
-First, run the development server:
+`Google Form -> Google Sheets -> Google Apps Script API -> Next.js Dashboard`
+
+## Struktur
+
+- `app/login/page.js`
+- `app/dashboard/page.js`
+- `app/api/resellers/route.js`
+- `app/api/edit/route.js`
+- `app/api/delete/route.js`
+- `components/ResellerTable.jsx`
+- `components/EditModal.jsx`
+- `lib/api.js`
+- `lib/googleScriptServer.js`
+- `google-apps-script/Code.gs`
+
+## Login Admin
+
+- Email: `admin@gmail.com`
+- Password: `admin`
+- Session login disimpan di `localStorage` key `reseller_admin_session`.
+
+## Setup Google Apps Script
+
+1. Buat project Apps Script baru.
+2. Copy isi `google-apps-script/Code.gs`.
+3. Deploy sebagai **Web App**:
+   - Execute as: `Me`
+   - Who has access: `Anyone`
+4. Ambil URL deployment (`.../exec`).
+5. Jika update script, lakukan **Deploy > Manage deployments > Edit > Deploy** agar versi terbaru aktif.
+
+Script sudah memakai Spreadsheet ID:
+
+`1vgYfhR9XdC6_me_9eM0GIk1QoLJTw-hFu5dhMyS2m0w`
+
+Default `SHEET_NAME` adalah `Form Responses 1`. Ubah di `Code.gs` jika nama sheet berbeda.
+
+## Setup Frontend
+
+1. Copy `.env.example` menjadi `.env.local`.
+2. Isi:
+
+```env
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/DEPLOYMENT_ID/exec
+```
+
+3. Jalankan:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Catatan:
+- Frontend memanggil API internal Next.js (`/api/resellers`, `/api/edit`, `/api/delete`) lalu diteruskan ke Apps Script.
+- Jika muncul pesan `Apps Script meminta login Google`, deployment Apps Script Anda belum `Who has access: Anyone`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Endpoint API (Apps Script)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `GET /resellers`
+- `POST /edit`
+- `POST /delete`
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Semua response dikembalikan dalam format JSON.
