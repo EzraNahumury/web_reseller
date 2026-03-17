@@ -100,7 +100,9 @@ export default function AdminDataTable({
                         <button
                           type="button"
                           onClick={() => onEdit(row)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-teal-800"
+                          aria-label="Update data admin"
+                          title="Update"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-white transition hover:bg-teal-800"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -121,44 +123,55 @@ export default function AdminDataTable({
                               strokeLinejoin="round"
                             />
                           </svg>
-                          Update
                         </button>
                         <button
                           type="button"
                           disabled={deletingRowIndex === row.rowIndex}
                           onClick={() => onDelete(row.rowIndex)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-rose-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                          aria-label="Delete data admin"
+                          title="Delete"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-700 text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                         >
                           {deletingRowIndex === row.rowIndex ? (
-                            "Menghapus..."
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="h-3.5 w-3.5 animate-spin"
+                            >
+                              <path
+                                d="M21 12a9 9 0 11-9-9"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
                           ) : (
-                            <>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                className="h-3.5 w-3.5"
-                              >
-                                <path
-                                  d="M3 6h18"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M8 6V4h8v2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M19 6l-1 14H6L5 6"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                              Delete
-                            </>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="h-3.5 w-3.5"
+                            >
+                              <path
+                                d="M3 6h18"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M8 6V4h8v2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M19 6l-1 14H6L5 6"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
                           )}
                         </button>
                       </div>
