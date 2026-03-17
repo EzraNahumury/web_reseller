@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import ResellerTable from "@/components/ResellerTable";
 import EditModal from "@/components/EditModal";
 import {
@@ -14,7 +15,6 @@ const SESSION_KEY = "reseller_admin_session";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [adminEmail, setAdminEmail] = useState("admin@gmail.com");
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -38,7 +38,6 @@ export default function DashboardPage() {
         router.replace("/login");
         return;
       }
-      setAdminEmail(session.email);
     } catch {
       localStorage.removeItem(SESSION_KEY);
       router.replace("/login");
@@ -121,21 +120,38 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen p-4 sm:p-6 lg:p-10">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <section className="rounded-3xl border border-white/70 bg-white/85 p-5 shadow-sm backdrop-blur sm:p-7">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal-700">
-                Dashboard Admin
-              </p>
-              <h1 className="mt-2 text-3xl font-bold text-slate-900">
-                Web Admin Reseller
-              </h1>
-              <p className="mt-2 text-sm text-slate-600">
-                Login sebagai <span className="font-semibold">{adminEmail}</span>
-              </p>
+        <section
+          id="admin"
+          className="rounded-3xl border border-white/70 bg-white/85 p-4 shadow-sm backdrop-blur sm:p-5"
+        >
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="rounded-2xl bg-slate-950 px-4 py-3">
+              <Image
+                src="/logo/ayres-logo.png"
+                alt="Logo Ayres"
+                width={220}
+                height={56}
+                className="h-9 w-auto object-contain sm:h-10"
+                priority
+              />
             </div>
 
-            <div className="flex gap-2">
+            <nav className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2 py-2">
+              <a
+                href="#data-reseller"
+                className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white"
+              >
+                Data Reseller
+              </a>
+              <a
+                href="#admin"
+                className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              >
+                Admin
+              </a>
+            </nav>
+
+            <div className="flex gap-2 lg:justify-end">
               <button
                 type="button"
                 onClick={loadResellers}
@@ -160,13 +176,15 @@ export default function DashboardPage() {
           </div>
         ) : null}
 
-        <ResellerTable
-          resellers={resellers}
-          isLoading={isLoading}
-          deletingRowIndex={deletingRowIndex}
-          onEdit={setSelectedReseller}
-          onDelete={handleDelete}
-        />
+        <div id="data-reseller">
+          <ResellerTable
+            resellers={resellers}
+            isLoading={isLoading}
+            deletingRowIndex={deletingRowIndex}
+            onEdit={setSelectedReseller}
+            onDelete={handleDelete}
+          />
+        </div>
       </div>
 
       {selectedReseller ? (
