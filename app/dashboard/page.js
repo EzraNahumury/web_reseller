@@ -259,6 +259,18 @@ export default function DashboardPage() {
     ),
   );
 
+  const usedResellerMap = adminRows.reduce((accumulator, item) => {
+    const key = String(item.listReseller || "").trim().toLowerCase();
+    if (key) {
+      accumulator[key] = true;
+    }
+    return accumulator;
+  }, {});
+
+  const availableResellerOptions = resellerOptions.filter(
+    (name) => !usedResellerMap[String(name).trim().toLowerCase()],
+  );
+
   if (isCheckingSession) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
@@ -360,7 +372,7 @@ export default function DashboardPage() {
                 onDeleteBenefit={handleDeleteBenefit}
               />
               <AdminMenuForm
-                resellerOptions={resellerOptions}
+                resellerOptions={availableResellerOptions}
                 benefitOptions={benefitOptions}
                 onSubmit={handleSubmitAdminBenefit}
                 isSubmitting={isSubmittingAdmin}

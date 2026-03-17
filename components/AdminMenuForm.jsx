@@ -116,16 +116,24 @@ export default function AdminMenuForm({
           >
             List Reseller
           </label>
+          {resellerOptions.length === 0 ? (
+            <p className="mb-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+              Semua reseller sudah dibuat di data admin.
+            </p>
+          ) : null}
           <select
             id="listReseller"
             name="listReseller"
             value={listReseller}
             onChange={(event) => setListReseller(event.target.value)}
+            disabled={resellerOptions.length === 0}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
             required
           >
             <option value="" disabled>
-              Pilih reseller
+              {resellerOptions.length === 0
+                ? "Tidak ada reseller tersedia"
+                : "Pilih reseller"}
             </option>
             {resellerOptions.map((option) => (
               <option key={option} value={option}>
@@ -222,7 +230,9 @@ export default function AdminMenuForm({
 
         <button
           type="submit"
-          disabled={isSubmitting || benefitOptions.length === 0}
+          disabled={
+            isSubmitting || benefitOptions.length === 0 || resellerOptions.length === 0
+          }
           className="rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
         >
           {isSubmitting ? "Menyimpan..." : "Simpan Data Admin"}
