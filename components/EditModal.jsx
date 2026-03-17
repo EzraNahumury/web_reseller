@@ -7,7 +7,8 @@ const FIELD_CONFIG = [
   {
     id: "statusResellerAyres",
     label: "Status Reseller Ayres",
-    type: "text",
+    type: "select",
+    options: ["Ayres", "Non Ayres"],
     required: true,
   },
   {
@@ -23,17 +24,55 @@ const FIELD_CONFIG = [
     required: true,
   },
   { id: "lokasiToko", label: "Lokasi Toko (Jika Ada)", type: "text" },
-  { id: "jenisReseller", label: "Jenis Reseller", type: "text", required: true },
+  {
+    id: "jenisReseller",
+    label: "Jenis Reseller",
+    type: "select",
+    options: ["Online", "Offline", "Online dan Offline"],
+    required: true,
+  },
 ];
+
+function normalizeStatusResellerAyres(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (text === "ayres") {
+    return "Ayres";
+  }
+  if (text === "non ayres") {
+    return "Non Ayres";
+  }
+  return "";
+}
+
+function normalizeJenisReseller(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (text === "online") {
+    return "Online";
+  }
+  if (text === "offline") {
+    return "Offline";
+  }
+  if (
+    text === "online & offline" ||
+    text === "online dan offline" ||
+    text === "online and offline" ||
+    text === "online/offline"
+  ) {
+    return "Online dan Offline";
+  }
+  return "";
+}
 
 function mapResellerToForm(reseller) {
   return {
     namaLengkap: reseller?.namaLengkap || "",
-    statusResellerAyres: reseller?.statusResellerAyres || "",
+    statusResellerAyres: normalizeStatusResellerAyres(
+      reseller?.statusResellerAyres,
+    ),
     nomorWhatsapp: reseller?.nomorWhatsapp || "",
     alamatLengkap: reseller?.alamatLengkap || "",
     lokasiToko: reseller?.lokasiToko || "",
-    jenisReseller: reseller?.jenisReseller || "",
+    jenisReseller: normalizeJenisReseller(reseller?.jenisReseller),
   };
 }
 
@@ -87,15 +126,35 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
               >
                 {field.label}
               </label>
-              <input
-                id={field.id}
-                name={field.id}
-                type={field.type}
-                value={form[field.id]}
-                onChange={handleChange}
-                required={Boolean(field.required)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-              />
+              {field.type === "select" ? (
+                <select
+                  id={field.id}
+                  name={field.id}
+                  value={form[field.id]}
+                  onChange={handleChange}
+                  required={Boolean(field.required)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                >
+                  <option value="" disabled>
+                    Pilih {field.label}
+                  </option>
+                  {field.options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  id={field.id}
+                  name={field.id}
+                  type={field.type}
+                  value={form[field.id]}
+                  onChange={handleChange}
+                  required={Boolean(field.required)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                />
+              )}
             </div>
           ))}
 
