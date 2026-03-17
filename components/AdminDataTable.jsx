@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
+
 function formatDateTime(value) {
   if (!value) {
     return "-";
@@ -43,11 +45,55 @@ export default function AdminDataTable({
   onDelete,
   deletingRowIndex,
 }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredRows = useMemo(() => {
+    const keyword = String(searchTerm || "").trim().toLowerCase();
+
+    if (!keyword) {
+      return rows;
+    }
+
+    return rows.filter((row) => {
+      const searchableText = [
+        row.timestamp,
+        formatDateTime(row.timestamp),
+        row.listReseller,
+        row.periodeMulai,
+        formatDateOnly(row.periodeMulai),
+        row.penjualan,
+        row.benefit,
+      ]
+        .map((value) => String(value || "").toLowerCase())
+        .join(" ");
+
+      return searchableText.includes(keyword);
+    });
+  }, [rows, searchTerm]);
+
   return (
     <section className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-sm sm:p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-bold text-slate-900">Data Admin Tersimpan</h3>
-        <p className="text-xs text-slate-500">Total {rows.length} data</p>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="text-xl font-bold text-slate-900">Data Admin Tersimpan</h3>
+          <p className="text-xs text-slate-500">
+            Total {filteredRows.length} dari {rows.length} data
+          </p>
+        </div>
+
+        <div className="w-full sm:w-[320px]">
+          <label htmlFor="search-admin-data" className="sr-only">
+            Cari data admin tersimpan
+          </label>
+          <input
+            id="search-admin-data"
+            type="text"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Cari reseller, periode, benefit..."
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+          />
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200">
@@ -73,17 +119,17 @@ export default function AdminDataTable({
                     Mengambil data admin...
                   </td>
                 </tr>
-              ) : rows.length === 0 ? (
+              ) : filteredRows.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
                     className="px-4 py-10 text-center text-sm text-slate-500"
                   >
-                    Belum ada data admin.
+                    Data admin tidak ditemukan.
                   </td>
                 </tr>
               ) : (
-                rows.map((row) => (
+                filteredRows.map((row) => (
                   <tr
                     key={row.rowIndex}
                     className="border-t border-slate-200 align-top text-slate-700"

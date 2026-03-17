@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
+
 export default function ResellerTable({
   resellers,
   isLoading,
@@ -7,13 +9,54 @@ export default function ResellerTable({
   onEdit,
   onDelete,
 }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredResellers = useMemo(() => {
+    const keyword = String(searchTerm || "").trim().toLowerCase();
+
+    if (!keyword) {
+      return resellers;
+    }
+
+    return resellers.filter((item) => {
+      const searchableText = [
+        item.namaLengkap,
+        item.statusResellerAyres,
+        item.nomorWhatsapp,
+        item.alamatLengkap,
+        item.lokasiToko,
+        item.jenisReseller,
+      ]
+        .map((value) => String(value || "").toLowerCase())
+        .join(" ");
+
+      return searchableText.includes(keyword);
+    });
+  }, [resellers, searchTerm]);
+
   return (
     <section className="rounded-3xl border border-white/70 bg-white/90 p-4 shadow-sm sm:p-6">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-slate-900">Data Reseller</h2>
-        <p className="text-xs text-slate-500">
-          Total {resellers.length} data reseller
-        </p>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Data Reseller</h2>
+          <p className="text-xs text-slate-500">
+            Total {filteredResellers.length} dari {resellers.length} data reseller
+          </p>
+        </div>
+
+        <div className="w-full sm:w-[320px]">
+          <label htmlFor="search-reseller" className="sr-only">
+            Cari data reseller
+          </label>
+          <input
+            id="search-reseller"
+            type="text"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Cari nama, status, nomor, alamat..."
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+          />
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200">
@@ -40,17 +83,17 @@ export default function ResellerTable({
                     Mengambil data reseller...
                   </td>
                 </tr>
-              ) : resellers.length === 0 ? (
+              ) : filteredResellers.length === 0 ? (
                 <tr>
                   <td
                     colSpan={7}
                     className="px-4 py-10 text-center text-sm text-slate-500"
                   >
-                    Belum ada data reseller.
+                    Data reseller tidak ditemukan.
                   </td>
                 </tr>
               ) : (
-                resellers.map((item) => (
+                filteredResellers.map((item) => (
                   <tr
                     key={item.rowIndex}
                     className="border-t border-slate-200 align-top text-slate-700"
