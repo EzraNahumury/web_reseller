@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ResellerTable from "@/components/ResellerTable";
 import EditModal from "@/components/EditModal";
@@ -68,24 +68,6 @@ export default function DashboardPage() {
 
     loadResellers();
   }, [isCheckingSession, loadResellers]);
-
-  const dashboardStats = useMemo(() => {
-    const withStore = resellers.filter(
-      (item) => item.lokasiToko && item.lokasiToko.trim().length > 0,
-    ).length;
-    const statusAktif = resellers.filter(
-      (item) =>
-        item.statusResellerAyres &&
-        item.statusResellerAyres.toLowerCase().includes("aktif"),
-    ).length;
-    const jenisCount = new Set(
-      resellers
-        .map((item) => item.jenisReseller)
-        .filter((item) => item && item.trim().length > 0),
-    ).size;
-
-    return { withStore, statusAktif, jenisCount };
-  }, [resellers]);
 
   const handleLogout = () => {
     localStorage.removeItem(SESSION_KEY);
@@ -170,36 +152,6 @@ export default function DashboardPage() {
               </button>
             </div>
           </div>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-white/70 bg-white/90 p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Total Data
-            </p>
-            <p className="mt-2 text-3xl font-bold text-slate-900">
-              {resellers.length}
-            </p>
-          </article>
-          <article className="rounded-2xl border border-white/70 bg-white/90 p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Status Aktif
-            </p>
-            <p className="mt-2 text-3xl font-bold text-emerald-700">
-              {dashboardStats.statusAktif}
-            </p>
-          </article>
-          <article className="rounded-2xl border border-white/70 bg-white/90 p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Jenis Reseller
-            </p>
-            <p className="mt-2 text-3xl font-bold text-teal-700">
-              {dashboardStats.jenisCount}
-            </p>
-            <p className="mt-1 text-xs text-slate-500">
-              {dashboardStats.withStore} reseller punya lokasi toko
-            </p>
-          </article>
         </section>
 
         {errorMessage ? (
