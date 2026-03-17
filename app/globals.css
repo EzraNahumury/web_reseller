@@ -1,14 +1,14 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
-  --app-bg: #f2f7f7;
-  --app-bg-alt: #ffffff;
-  --ink: #0f172a;
-  --muted: #64748b;
+  --app-bg: #050505;
+  --app-bg-alt: #121212;
+  --ink: #f5f5f5;
+  --muted: #a1a1aa;
   --card-bg: #ffffff;
-  --line: #dbe4e8;
-  --brand: #0f766e;
-  --brand-soft: #ccfbf1;
+  --line: #27272a;
+  --brand: #dc2626;
+  --brand-soft: #fee2e2;
   --danger: #dc2626;
 }
 
@@ -16,13 +16,17 @@
   box-sizing: border-box;
 }
 
+html,
 body {
-  min-height: 100vh;
+  min-height: 100%;
+}
+
+body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at top right, #ccfbf1 0%, rgba(204, 251, 241, 0) 38%),
-    radial-gradient(circle at bottom left, #dbeafe 0%, rgba(219, 234, 254, 0) 36%),
+    radial-gradient(circle at top right, rgba(220, 38, 38, 0.28) 0%, rgba(220, 38, 38, 0) 40%),
+    radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0) 36%),
     linear-gradient(140deg, var(--app-bg) 0%, var(--app-bg-alt) 100%);
   font-family: "Segoe UI Variable", "Trebuchet MS", "Segoe UI", sans-serif;
 }

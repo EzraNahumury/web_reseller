@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -59,7 +59,7 @@ export default function LoginPage() {
   if (isCheckingSession) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
-        <div className="rounded-2xl border border-white/70 bg-white/90 px-6 py-4 text-sm text-slate-600 shadow-sm">
+        <div className="rounded-2xl border border-white/70 bg-white/90 px-6 py-4 text-sm text-zinc-600 shadow-sm">
           Memeriksa sesi login...
         </div>
       </main>
@@ -69,11 +69,11 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md rounded-3xl border border-white/70 bg-white/90 p-6 shadow-xl backdrop-blur sm:p-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-teal-700">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-red-700">
           Admin Panel
         </p>
-        <h1 className="mb-2 text-3xl font-bold text-slate-900">Login Admin</h1>
-        <p className="mb-8 text-sm text-slate-600">
+        <h1 className="mb-2 text-3xl font-bold text-zinc-900">Login Admin</h1>
+        <p className="mb-8 text-sm text-zinc-600">
           Masuk untuk mengelola data reseller dari Google Form.
         </p>
 
@@ -81,7 +81,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="mb-2 block text-sm font-semibold text-slate-700"
+              className="mb-2 block text-sm font-semibold text-zinc-700"
             >
               Email
             </label>
@@ -94,7 +94,7 @@ export default function LoginPage() {
               autoComplete="email"
               autoCapitalize="off"
               autoCorrect="off"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+              className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
               required
             />
           </div>
@@ -102,7 +102,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="mb-2 block text-sm font-semibold text-slate-700"
+              className="mb-2 block text-sm font-semibold text-zinc-700"
             >
               Password
             </label>
@@ -114,14 +114,14 @@ export default function LoginPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="admin"
                 autoComplete="current-password"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 pr-12 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={showPassword ? "Sembunyikan password" : "Lihat password"}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-700"
               >
                 {showPassword ? (
                   <svg
@@ -164,7 +164,7 @@ export default function LoginPage() {
           </div>
 
           {errorMessage ? (
-            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {errorMessage}
             </div>
           ) : null}
@@ -172,14 +172,15 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            className="w-full rounded-xl bg-red-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
           >
             {isSubmitting ? "Memproses..." : "Masuk"}
           </button>
 
-          <p className="text-center text-xs text-slate-500">{LOGIN_HINT}</p>
+          <p className="text-center text-xs text-zinc-500">{LOGIN_HINT}</p>
         </form>
       </div>
     </main>
   );
 }
+

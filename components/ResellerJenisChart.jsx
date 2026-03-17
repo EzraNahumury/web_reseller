@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 function normalizeJenisReseller(value) {
   const text = String(value || "").trim().toLowerCase();
@@ -73,28 +73,28 @@ export default function ResellerJenisChart({ resellers }) {
       key: "online",
       label: "Online",
       count: counts.online,
-      color: "#0f766e",
-      barClass: "bg-teal-600",
-      badgeClass: "bg-teal-50 text-teal-700",
-      dotClass: "bg-teal-600",
+      color: "#dc2626",
+      barClass: "bg-red-600",
+      badgeClass: "bg-red-50 text-red-700",
+      dotClass: "bg-red-600",
     },
     {
       key: "offline",
       label: "Offline",
       count: counts.offline,
-      color: "#334155",
-      barClass: "bg-slate-700",
-      badgeClass: "bg-slate-100 text-slate-700",
-      dotClass: "bg-slate-700",
+      color: "#18181b",
+      barClass: "bg-zinc-700",
+      badgeClass: "bg-zinc-100 text-zinc-700",
+      dotClass: "bg-zinc-700",
     },
     {
       key: "online-offline",
       label: "Online dan Offline",
       count: counts.onlineOffline,
-      color: "#0ea5e9",
-      barClass: "bg-sky-500",
-      badgeClass: "bg-sky-50 text-sky-700",
-      dotClass: "bg-sky-500",
+      color: "#ef4444",
+      barClass: "bg-red-500",
+      badgeClass: "bg-red-100 text-red-700",
+      dotClass: "bg-red-500",
     },
   ];
 
@@ -103,10 +103,10 @@ export default function ResellerJenisChart({ resellers }) {
       key: "lainnya",
       label: "Lainnya / Kosong",
       count: counts.lainnya,
-      color: "#94a3b8",
-      barClass: "bg-slate-400",
-      badgeClass: "bg-slate-100 text-slate-600",
-      dotClass: "bg-slate-400",
+      color: "#a1a1aa",
+      barClass: "bg-zinc-400",
+      badgeClass: "bg-zinc-100 text-zinc-600",
+      dotClass: "bg-zinc-400",
     });
   }
 
@@ -117,29 +117,29 @@ export default function ResellerJenisChart({ resellers }) {
 
   const pieStyle = total
     ? { background: buildConicGradient(withPercent, total) }
-    : { background: "#e2e8f0" };
+    : { background: "#e4e4e7" };
 
   return (
     <section className="rounded-3xl border border-white/70 bg-white/90 p-4 shadow-sm sm:p-6">
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-slate-900">Grafik Jenis Reseller</h2>
-        <p className="text-xs text-slate-500">Total {total} reseller</p>
+        <h2 className="text-xl font-bold text-zinc-900">Grafik Jenis Reseller</h2>
+        <p className="text-xs text-zinc-500">Total {total} reseller</p>
       </div>
 
       {total === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-10 text-center text-sm text-zinc-500">
           Belum ada data reseller untuk ditampilkan di grafik.
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-          <div className="mx-auto flex w-full max-w-[280px] flex-col items-center rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="mx-auto flex w-full max-w-[280px] flex-col items-center rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
             <div className="relative h-44 w-44 rounded-full" style={pieStyle}>
               <div className="absolute inset-6 rounded-full bg-white shadow-inner" />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
                   Total
                 </p>
-                <p className="text-3xl font-bold text-slate-900">{total}</p>
+                <p className="text-3xl font-bold text-zinc-900">{total}</p>
               </div>
             </div>
 
@@ -159,16 +159,16 @@ export default function ResellerJenisChart({ resellers }) {
             </div>
           </div>
 
-          <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-4">
             {withPercent.map((item) => (
               <div key={item.key}>
                 <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
-                  <p className="font-semibold text-slate-700">{item.label}</p>
-                  <p className="text-slate-500">
+                  <p className="font-semibold text-zinc-700">{item.label}</p>
+                  <p className="text-zinc-500">
                     {item.count} reseller ({item.percent}%)
                   </p>
                 </div>
-                <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-3 overflow-hidden rounded-full bg-zinc-100">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${item.barClass}`}
                     style={{ width: `${item.percent}%` }}
@@ -182,3 +182,5 @@ export default function ResellerJenisChart({ resellers }) {
     </section>
   );
 }
+
+

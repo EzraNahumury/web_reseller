@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
@@ -75,8 +75,8 @@ export default function AdminDataTable({
     <section className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-sm sm:p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-xl font-bold text-slate-900">Data Admin Tersimpan</h3>
-          <p className="text-xs text-slate-500">
+          <h3 className="text-xl font-bold text-zinc-900">Data Admin Tersimpan</h3>
+          <p className="text-xs text-zinc-500">
             Total {filteredRows.length} dari {rows.length} data
           </p>
         </div>
@@ -91,16 +91,16 @@ export default function AdminDataTable({
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Cari reseller, periode, benefit..."
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
           />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200">
         <div className="overflow-x-auto">
           <table className="min-w-[1080px] w-full bg-white text-sm">
             <thead>
-              <tr className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr className="bg-zinc-50 text-left text-xs uppercase tracking-wider text-zinc-500">
                 <th className="px-4 py-3 font-semibold">Tanggal Input</th>
                 <th className="px-4 py-3 font-semibold">List Reseller</th>
                 <th className="px-4 py-3 font-semibold">Periode Mulai</th>
@@ -114,7 +114,7 @@ export default function AdminDataTable({
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-10 text-center text-sm text-slate-500"
+                    className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Mengambil data admin...
                   </td>
@@ -123,7 +123,7 @@ export default function AdminDataTable({
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-10 text-center text-sm text-slate-500"
+                    className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Data admin tidak ditemukan.
                   </td>
@@ -132,10 +132,10 @@ export default function AdminDataTable({
                 filteredRows.map((row) => (
                   <tr
                     key={row.rowIndex}
-                    className="border-t border-slate-200 align-top text-slate-700"
+                    className="border-t border-zinc-200 align-top text-zinc-700"
                   >
                     <td className="px-4 py-3">{formatDateTime(row.timestamp)}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-800">
+                    <td className="px-4 py-3 font-semibold text-zinc-800">
                       {row.listReseller || "-"}
                     </td>
                     <td className="px-4 py-3">{formatDateOnly(row.periodeMulai)}</td>
@@ -148,7 +148,7 @@ export default function AdminDataTable({
                           onClick={() => onEdit(row)}
                           aria-label="Update data admin"
                           title="Update"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-white transition hover:bg-teal-800"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-700 text-white transition hover:bg-red-800"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@ export default function AdminDataTable({
                           onClick={() => onDelete(row.rowIndex)}
                           aria-label="Delete data admin"
                           title="Delete"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-700 text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-700 text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
                         >
                           {deletingRowIndex === row.rowIndex ? (
                             <svg
@@ -232,3 +232,4 @@ export default function AdminDataTable({
     </section>
   );
 }
+

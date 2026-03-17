@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -276,7 +276,7 @@ export default function DashboardPage() {
   if (isCheckingSession) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
-        <div className="rounded-2xl border border-white/70 bg-white/90 px-6 py-4 text-sm text-slate-600 shadow-sm">
+        <div className="rounded-2xl border border-white/70 bg-white/90 px-6 py-4 text-sm text-zinc-600 shadow-sm">
           Memeriksa sesi login...
         </div>
       </main>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
           className="rounded-3xl border border-white/70 bg-white/85 p-4 shadow-sm backdrop-blur sm:p-5"
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="rounded-2xl bg-slate-950 px-4 py-3">
+            <div className="rounded-2xl bg-zinc-950 px-4 py-3">
               <Image
                 src="/logo/ayres-logo.png"
                 alt="Logo Ayres"
@@ -302,14 +302,14 @@ export default function DashboardPage() {
               />
             </div>
 
-            <nav className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2 py-2">
+            <nav className="flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 bg-white px-2 py-2">
               <button
                 type="button"
                 onClick={() => setActiveMenu("data-reseller")}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
                   activeMenu === "data-reseller"
-                    ? "bg-teal-700 text-white"
-                    : "text-slate-700 hover:bg-slate-100"
+                    ? "bg-red-700 text-white"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Data Reseller
@@ -319,8 +319,8 @@ export default function DashboardPage() {
                 onClick={() => setActiveMenu("menu-admin")}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
                   activeMenu === "menu-admin"
-                    ? "bg-teal-700 text-white"
-                    : "text-slate-700 hover:bg-slate-100"
+                    ? "bg-red-700 text-white"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Admin
@@ -331,14 +331,14 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={handleRefresh}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-500 hover:text-teal-700"
+                className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-red-500 hover:text-red-700"
               >
                 Refresh
               </button>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-700"
               >
                 Logout
               </button>
@@ -347,7 +347,7 @@ export default function DashboardPage() {
         </section>
 
         {activeMenu === "data-reseller" && errorMessage ? (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {errorMessage}
           </div>
         ) : null}
@@ -386,7 +386,7 @@ export default function DashboardPage() {
             </div>
 
             {adminRowsErrorMessage ? (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {adminRowsErrorMessage}
               </div>
             ) : null}
@@ -424,5 +424,6 @@ export default function DashboardPage() {
     </main>
   );
 }
+
 
 

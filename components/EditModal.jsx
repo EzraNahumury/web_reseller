@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -97,21 +97,21 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 p-4">
       <div className="w-full max-w-2xl rounded-3xl border border-white/60 bg-white p-6 shadow-2xl sm:p-7">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal-700">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-red-700">
               Edit Data
             </p>
-            <h3 className="mt-2 text-2xl font-bold text-slate-900">
+            <h3 className="mt-2 text-2xl font-bold text-zinc-900">
               Edit Reseller
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-600 transition hover:bg-zinc-100"
           >
             Tutup
           </button>
@@ -122,7 +122,7 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
             <div key={field.id}>
               <label
                 htmlFor={field.id}
-                className="mb-2 block text-sm font-semibold text-slate-700"
+                className="mb-2 block text-sm font-semibold text-zinc-700"
               >
                 {field.label}
               </label>
@@ -133,7 +133,7 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
                   value={form[field.id]}
                   onChange={handleChange}
                   required={Boolean(field.required)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                  className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
                 >
                   <option value="" disabled>
                     Pilih {field.label}
@@ -152,7 +152,7 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
                   value={form[field.id]}
                   onChange={handleChange}
                   required={Boolean(field.required)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                  className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
                 />
               )}
             </div>
@@ -162,14 +162,14 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              className="rounded-xl border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
             >
               {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
             </button>
@@ -179,3 +179,4 @@ export default function EditModal({ reseller, isSaving, onClose, onSave }) {
     </div>
   );
 }
+

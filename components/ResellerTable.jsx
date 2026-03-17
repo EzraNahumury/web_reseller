@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
@@ -38,8 +38,8 @@ export default function ResellerTable({
     <section className="rounded-3xl border border-white/70 bg-white/90 p-4 shadow-sm sm:p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Data Reseller</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-xl font-bold text-zinc-900">Data Reseller</h2>
+          <p className="text-xs text-zinc-500">
             Total {filteredResellers.length} dari {resellers.length} data reseller
           </p>
         </div>
@@ -54,16 +54,16 @@ export default function ResellerTable({
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Cari nama, status, nomor, alamat..."
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
           />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200">
         <div className="overflow-x-auto">
           <table className="min-w-[1080px] w-full bg-white text-sm">
             <thead>
-              <tr className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr className="bg-zinc-50 text-left text-xs uppercase tracking-wider text-zinc-500">
                 <th className="px-4 py-3 font-semibold">Nama Lengkap</th>
                 <th className="px-4 py-3 font-semibold">Status Reseller Ayres</th>
                 <th className="px-4 py-3 font-semibold">Nomor WhatsApp</th>
@@ -78,7 +78,7 @@ export default function ResellerTable({
                 <tr>
                   <td
                     colSpan={7}
-                    className="px-4 py-10 text-center text-sm text-slate-500"
+                    className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Mengambil data reseller...
                   </td>
@@ -87,7 +87,7 @@ export default function ResellerTable({
                 <tr>
                   <td
                     colSpan={7}
-                    className="px-4 py-10 text-center text-sm text-slate-500"
+                    className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Data reseller tidak ditemukan.
                   </td>
@@ -96,9 +96,9 @@ export default function ResellerTable({
                 filteredResellers.map((item) => (
                   <tr
                     key={item.rowIndex}
-                    className="border-t border-slate-200 align-top text-slate-700"
+                    className="border-t border-zinc-200 align-top text-zinc-700"
                   >
-                    <td className="px-4 py-3 font-semibold text-slate-800">
+                    <td className="px-4 py-3 font-semibold text-zinc-800">
                       {item.namaLengkap || "-"}
                     </td>
                     <td className="px-4 py-3">{item.statusResellerAyres || "-"}</td>
@@ -113,7 +113,7 @@ export default function ResellerTable({
                           onClick={() => onEdit(item)}
                           aria-label="Update data reseller"
                           title="Update"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-white transition hover:bg-teal-800"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-700 text-white transition hover:bg-red-800"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +141,7 @@ export default function ResellerTable({
                           onClick={() => onDelete(item.rowIndex)}
                           aria-label="Delete data reseller"
                           title="Delete"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-700 text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-700 text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
                         >
                           {deletingRowIndex === item.rowIndex ? (
                             <svg
@@ -197,3 +197,4 @@ export default function ResellerTable({
     </section>
   );
 }
+

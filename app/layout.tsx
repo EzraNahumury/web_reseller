@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import GlobalParticlesBackground from "@/components/GlobalParticlesBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,8 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className="antialiased">
-        {children}
+      <body className="relative min-h-screen antialiased">
+        <GlobalParticlesBackground />
+        <div className="relative z-10">{children}</div>
       </body>
     </html>
   );
