@@ -1,6 +1,25 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useState } from "react";
+
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "ayres", label: "Ayres" },
+  { key: "non-ayres", label: "Non Ayres" },
+];
+
+function normalizeStatus(value) {
+  const lowerValue = String(value || "").trim().toLowerCase();
+  if (lowerValue === "ayres") {
+    return "ayres";
+  }
+
+  if (lowerValue === "non ayres" || lowerValue === "non-ayres") {
+    return "non-ayres";
+  }
+
+  return "";
+}
 
 export default function ResellerTable({
   resellers,
@@ -10,15 +29,23 @@ export default function ResellerTable({
   onDelete,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const filteredResellers = useMemo(() => {
     const keyword = String(searchTerm || "").trim().toLowerCase();
 
-    if (!keyword) {
-      return resellers;
-    }
-
     return resellers.filter((item) => {
+      if (statusFilter !== "all") {
+        const normalizedStatus = normalizeStatus(item.statusResellerAyres);
+        if (normalizedStatus !== statusFilter) {
+          return false;
+        }
+      }
+
+      if (!keyword) {
+        return true;
+      }
+
       const searchableText = [
         item.namaLengkap,
         item.statusResellerAyres,
@@ -32,14 +59,30 @@ export default function ResellerTable({
 
       return searchableText.includes(keyword);
     });
-  }, [resellers, searchTerm]);
+  }, [resellers, searchTerm, statusFilter]);
 
   return (
     <section className="rounded-3xl border border-white/70 bg-white/90 p-4 shadow-sm sm:p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-bold text-zinc-900">Data Reseller</h2>
-          <p className="text-xs text-zinc-500">
+          <div className="mt-3 flex flex-wrap gap-2">
+            {STATUS_FILTERS.map((filter) => (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={() => setStatusFilter(filter.key)}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                  statusFilter === filter.key
+                    ? "bg-red-700 text-white"
+                    : "border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-800"
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-zinc-500 mt-2">
             Total {filteredResellers.length} dari {resellers.length} data reseller
           </p>
         </div>
@@ -197,4 +240,3 @@ export default function ResellerTable({
     </section>
   );
 }
-
