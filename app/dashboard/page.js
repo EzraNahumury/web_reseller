@@ -7,10 +7,15 @@ import ResellerTable from "@/components/ResellerTable";
 import EditModal from "@/components/EditModal";
 import AdminMenuForm from "@/components/AdminMenuForm";
 import BenefitManager from "@/components/BenefitManager";
+import AdminDataTable from "@/components/AdminDataTable";
+import AdminEditModal from "@/components/AdminEditModal";
 import {
   addAdminBenefitOption,
   createAdminBenefit,
+  deleteAdminRow,
   deleteAdminBenefitOption,
+  updateAdminRow,
+  fetchAdminRows,
   deleteResellerByRow,
   fetchAdminBenefits,
   fetchResellers,
@@ -36,6 +41,12 @@ export default function DashboardPage() {
   const [isManagingBenefit, setIsManagingBenefit] = useState(false);
   const [benefitErrorMessage, setBenefitErrorMessage] = useState("");
   const [benefitSuccessMessage, setBenefitSuccessMessage] = useState("");
+  const [adminRows, setAdminRows] = useState([]);
+  const [isLoadingAdminRows, setIsLoadingAdminRows] = useState(false);
+  const [adminRowsErrorMessage, setAdminRowsErrorMessage] = useState("");
+  const [selectedAdminRow, setSelectedAdminRow] = useState(null);
+  const [isSavingAdminRow, setIsSavingAdminRow] = useState(false);
+  const [deletingAdminRowIndex, setDeletingAdminRowIndex] = useState(null);
 
   useEffect(() => {
     const sessionRaw = localStorage.getItem(SESSION_KEY);
@@ -84,8 +95,23 @@ export default function DashboardPage() {
     }
   }, []);
 
+  const loadAdminRows = useCallback(async () => {
+    setIsLoadingAdminRows(true);
+    setAdminRowsErrorMessage("");
+    try {
+      const data = await fetchAdminRows();
+      setAdminRows(data);
+    } catch (error) {
+      setAdminRowsErrorMessage(
+        error.message || "Gagal mengambil data admin tersimpan.",
+      );
+    } finally {
+      setIsLoadingAdminRows(false);
+    }
+  }, []);
+
   const handleRefresh = async () => {
-    await Promise.all([loadResellers(), loadBenefitOptions()]);
+    await Promise.all([loadResellers(), loadBenefitOptions(), loadAdminRows()]);
   };
 
   useEffect(() => {
@@ -95,7 +121,8 @@ export default function DashboardPage() {
 
     loadResellers();
     loadBenefitOptions();
-  }, [isCheckingSession, loadResellers, loadBenefitOptions]);
+    loadAdminRows();
+  }, [isCheckingSession, loadResellers, loadBenefitOptions, loadAdminRows]);
 
   const handleLogout = () => {
     localStorage.removeItem(SESSION_KEY);
@@ -143,6 +170,7 @@ export default function DashboardPage() {
 
     try {
       await createAdminBenefit(payload);
+      await loadAdminRows();
       setAdminSuccessMessage("Data admin berhasil disimpan.");
       return true;
     } catch (error) {
@@ -186,6 +214,40 @@ export default function DashboardPage() {
       return false;
     } finally {
       setIsManagingBenefit(false);
+    }
+  };
+
+  const handleUpdateAdminRow = async (payload) => {
+    setIsSavingAdminRow(true);
+    setAdminRowsErrorMessage("");
+    try {
+      await updateAdminRow(payload);
+      setSelectedAdminRow(null);
+      await loadAdminRows();
+    } catch (error) {
+      setAdminRowsErrorMessage(error.message || "Gagal update data admin.");
+    } finally {
+      setIsSavingAdminRow(false);
+    }
+  };
+
+  const handleDeleteAdminRow = async (rowIndex) => {
+    const isConfirmed = window.confirm(
+      "Yakin ingin menghapus data admin tersimpan ini?",
+    );
+    if (!isConfirmed) {
+      return;
+    }
+
+    setDeletingAdminRowIndex(rowIndex);
+    setAdminRowsErrorMessage("");
+    try {
+      await deleteAdminRow(rowIndex);
+      await loadAdminRows();
+    } catch (error) {
+      setAdminRowsErrorMessage(error.message || "Gagal menghapus data admin.");
+    } finally {
+      setDeletingAdminRowIndex(null);
     }
   };
 
@@ -287,26 +349,52 @@ export default function DashboardPage() {
             />
           </div>
         ) : (
-          <div className="grid gap-6 xl:grid-cols-2">
-            <BenefitManager
-              benefitOptions={benefitOptions}
-              isSubmitting={isManagingBenefit}
-              errorMessage={benefitErrorMessage}
-              successMessage={benefitSuccessMessage}
-              onAddBenefit={handleAddBenefit}
-              onDeleteBenefit={handleDeleteBenefit}
-            />
-            <AdminMenuForm
-              resellerOptions={resellerOptions}
-              benefitOptions={benefitOptions}
-              onSubmit={handleSubmitAdminBenefit}
-              isSubmitting={isSubmittingAdmin}
-              errorMessage={adminErrorMessage}
-              successMessage={adminSuccessMessage}
+          <div className="space-y-6">
+            <div className="grid gap-6 xl:grid-cols-2">
+              <BenefitManager
+                benefitOptions={benefitOptions}
+                isSubmitting={isManagingBenefit}
+                errorMessage={benefitErrorMessage}
+                successMessage={benefitSuccessMessage}
+                onAddBenefit={handleAddBenefit}
+                onDeleteBenefit={handleDeleteBenefit}
+              />
+              <AdminMenuForm
+                resellerOptions={resellerOptions}
+                benefitOptions={benefitOptions}
+                onSubmit={handleSubmitAdminBenefit}
+                isSubmitting={isSubmittingAdmin}
+                errorMessage={adminErrorMessage}
+                successMessage={adminSuccessMessage}
+              />
+            </div>
+
+            {adminRowsErrorMessage ? (
+              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                {adminRowsErrorMessage}
+              </div>
+            ) : null}
+
+            <AdminDataTable
+              rows={adminRows}
+              isLoading={isLoadingAdminRows}
+              onEdit={setSelectedAdminRow}
+              onDelete={handleDeleteAdminRow}
+              deletingRowIndex={deletingAdminRowIndex}
             />
           </div>
         )}
       </div>
+
+      {selectedAdminRow ? (
+        <AdminEditModal
+          row={selectedAdminRow}
+          benefitOptions={benefitOptions}
+          isSaving={isSavingAdminRow}
+          onClose={() => setSelectedAdminRow(null)}
+          onSave={handleUpdateAdminRow}
+        />
+      ) : null}
 
       {selectedReseller ? (
         <EditModal

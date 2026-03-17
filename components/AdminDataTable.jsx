@@ -1,19 +1,53 @@
 "use client";
 
-export default function ResellerTable({
-  resellers,
+function formatDateTime(value) {
+  if (!value) {
+    return "-";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+
+  return date.toLocaleString("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatDateOnly(value) {
+  if (!value) {
+    return "-";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+
+  return date.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+export default function AdminDataTable({
+  rows,
   isLoading,
-  deletingRowIndex,
   onEdit,
   onDelete,
+  deletingRowIndex,
 }) {
   return (
-    <section className="rounded-3xl border border-white/70 bg-white/90 p-4 shadow-sm sm:p-6">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-slate-900">Data Reseller</h2>
-        <p className="text-xs text-slate-500">
-          Total {resellers.length} data reseller
-        </p>
+    <section className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-sm sm:p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-xl font-bold text-slate-900">Data Admin Tersimpan</h3>
+        <p className="text-xs text-slate-500">Total {rows.length} data</p>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200">
@@ -21,12 +55,11 @@ export default function ResellerTable({
           <table className="min-w-[1080px] w-full bg-white text-sm">
             <thead>
               <tr className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-                <th className="px-4 py-3 font-semibold">Nama Lengkap</th>
-                <th className="px-4 py-3 font-semibold">Status Reseller Ayres</th>
-                <th className="px-4 py-3 font-semibold">Nomor WhatsApp</th>
-                <th className="px-4 py-3 font-semibold">Alamat Lengkap</th>
-                <th className="px-4 py-3 font-semibold">Lokasi Toko</th>
-                <th className="px-4 py-3 font-semibold">Jenis Reseller</th>
+                <th className="px-4 py-3 font-semibold">Tanggal Input</th>
+                <th className="px-4 py-3 font-semibold">List Reseller</th>
+                <th className="px-4 py-3 font-semibold">Periode Mulai</th>
+                <th className="px-4 py-3 font-semibold">Penjualan</th>
+                <th className="px-4 py-3 font-semibold">Benefit</th>
                 <th className="px-4 py-3 font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -34,40 +67,39 @@ export default function ResellerTable({
               {isLoading ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={6}
                     className="px-4 py-10 text-center text-sm text-slate-500"
                   >
-                    Mengambil data reseller...
+                    Mengambil data admin...
                   </td>
                 </tr>
-              ) : resellers.length === 0 ? (
+              ) : rows.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={6}
                     className="px-4 py-10 text-center text-sm text-slate-500"
                   >
-                    Belum ada data reseller.
+                    Belum ada data admin.
                   </td>
                 </tr>
               ) : (
-                resellers.map((item) => (
+                rows.map((row) => (
                   <tr
-                    key={item.rowIndex}
+                    key={row.rowIndex}
                     className="border-t border-slate-200 align-top text-slate-700"
                   >
+                    <td className="px-4 py-3">{formatDateTime(row.timestamp)}</td>
                     <td className="px-4 py-3 font-semibold text-slate-800">
-                      {item.namaLengkap || "-"}
+                      {row.listReseller || "-"}
                     </td>
-                    <td className="px-4 py-3">{item.statusResellerAyres || "-"}</td>
-                    <td className="px-4 py-3">{item.nomorWhatsapp || "-"}</td>
-                    <td className="px-4 py-3">{item.alamatLengkap || "-"}</td>
-                    <td className="px-4 py-3">{item.lokasiToko || "-"}</td>
-                    <td className="px-4 py-3">{item.jenisReseller || "-"}</td>
+                    <td className="px-4 py-3">{formatDateOnly(row.periodeMulai)}</td>
+                    <td className="px-4 py-3">{row.penjualan || "-"}</td>
+                    <td className="px-4 py-3">{row.benefit || "-"}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button
                           type="button"
-                          onClick={() => onEdit(item)}
+                          onClick={() => onEdit(row)}
                           className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-teal-800"
                         >
                           <svg
@@ -93,11 +125,11 @@ export default function ResellerTable({
                         </button>
                         <button
                           type="button"
-                          disabled={deletingRowIndex === item.rowIndex}
-                          onClick={() => onDelete(item.rowIndex)}
+                          disabled={deletingRowIndex === row.rowIndex}
+                          onClick={() => onDelete(row.rowIndex)}
                           className="inline-flex items-center gap-1.5 rounded-lg bg-rose-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                         >
-                          {deletingRowIndex === item.rowIndex ? (
+                          {deletingRowIndex === row.rowIndex ? (
                             "Menghapus..."
                           ) : (
                             <>

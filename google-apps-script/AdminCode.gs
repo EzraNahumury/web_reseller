@@ -68,6 +68,22 @@ function doPost(e) {
       });
     }
 
+    if (action === "admin-update") {
+      updateAdminRow_(payload);
+      return toJson_({
+        success: true,
+        message: "Data admin berhasil diupdate.",
+      });
+    }
+
+    if (action === "admin-delete") {
+      deleteAdminRow_(payload);
+      return toJson_({
+        success: true,
+        message: "Data admin berhasil dihapus.",
+      });
+    }
+
     if (action === "admin-benefit-add") {
       addBenefit_(payload);
       return toJson_({
@@ -103,6 +119,68 @@ function createAdminRow_(payload) {
   const periodeMulai = String(payload.periodeMulai || "").trim();
   const penjualan = normalizeArray_(payload.penjualan);
   const benefits = normalizeArray_(payload.benefits);
+  validateAdminPayload_(listReseller, periodeMulai, penjualan, benefits);
+
+  const sheet = getAdminSheet_();
+  ensureHeaderRow_(sheet, ADMIN_HEADERS);
+
+  sheet.appendRow([
+    new Date(),
+    listReseller,
+    periodeMulai,
+    penjualan.join(", "),
+    benefits.join(", "),
+  ]);
+}
+
+function updateAdminRow_(payload) {
+  const rowIndex = Number(payload.rowIndex);
+  if (!Number.isInteger(rowIndex) || rowIndex < 2) {
+    throw new Error("rowIndex tidak valid untuk update.");
+  }
+
+  const listReseller = String(payload.listReseller || "").trim();
+  const periodeMulai = String(payload.periodeMulai || "").trim();
+  const penjualan = normalizeArray_(payload.penjualan);
+  const benefits = normalizeArray_(payload.benefits);
+  validateAdminPayload_(listReseller, periodeMulai, penjualan, benefits);
+
+  const sheet = getAdminSheet_();
+  ensureHeaderRow_(sheet, ADMIN_HEADERS);
+
+  const lastRow = sheet.getLastRow();
+  if (rowIndex > lastRow) {
+    throw new Error("Data admin tidak ditemukan.");
+  }
+
+  const current =
+    sheet.getRange(rowIndex, 1, 1, ADMIN_HEADERS.length).getValues()[0];
+  current[1] = listReseller;
+  current[2] = periodeMulai;
+  current[3] = penjualan.join(", ");
+  current[4] = benefits.join(", ");
+
+  sheet.getRange(rowIndex, 1, 1, ADMIN_HEADERS.length).setValues([current]);
+}
+
+function deleteAdminRow_(payload) {
+  const rowIndex = Number(payload.rowIndex);
+  if (!Number.isInteger(rowIndex) || rowIndex < 2) {
+    throw new Error("rowIndex tidak valid untuk delete.");
+  }
+
+  const sheet = getAdminSheet_();
+  ensureHeaderRow_(sheet, ADMIN_HEADERS);
+
+  const lastRow = sheet.getLastRow();
+  if (rowIndex > lastRow) {
+    throw new Error("Data admin tidak ditemukan.");
+  }
+
+  sheet.deleteRow(rowIndex);
+}
+
+function validateAdminPayload_(listReseller, periodeMulai, penjualan, benefits) {
   const masterBenefits = getBenefitList_();
 
   if (!listReseller) {
@@ -128,17 +206,6 @@ function createAdminRow_(payload) {
   if (invalidBenefits.length > 0) {
     throw new Error(`Benefit tidak valid: ${invalidBenefits.join(", ")}`);
   }
-
-  const sheet = getAdminSheet_();
-  ensureHeaderRow_(sheet, ADMIN_HEADERS);
-
-  sheet.appendRow([
-    new Date(),
-    listReseller,
-    periodeMulai,
-    penjualan.join(", "),
-    benefits.join(", "),
-  ]);
 }
 
 function getAdminRows_() {
@@ -150,7 +217,8 @@ function getAdminRows_() {
     return [];
   }
 
-  const rows = sheet.getRange(2, 1, lastRow - 1, ADMIN_HEADERS.length).getValues();
+  const rows =
+    sheet.getRange(2, 1, lastRow - 1, ADMIN_HEADERS.length).getValues();
 
   return rows.map(function (row, index) {
     return {
@@ -361,7 +429,8 @@ function ensureHeaderRow_(sheet, headers) {
 
 function getAction_(e) {
   const pathInfo = e && e.pathInfo ? String(e.pathInfo) : "";
-  const queryAction = e && e.parameter && e.parameter.action ? String(e.parameter.action) : "";
+  const queryAction =
+    e && e.parameter && e.parameter.action ? String(e.parameter.action) : "";
   const routeSource = pathInfo || queryAction;
 
   return routeSource.replace(/^\/+|\/+$/g, "");
