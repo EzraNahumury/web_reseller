@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 
@@ -31,6 +31,7 @@ const FIELD_CONFIG = [
     options: ["Online", "Offline", "Online dan Offline"],
     required: true,
   },
+  { id: "omset", label: "Omset", type: "text" },
 ];
 
 function normalizeStatusResellerAyres(value) {
@@ -73,6 +74,7 @@ function mapResellerToForm(reseller) {
     alamatLengkap: reseller?.alamatLengkap || "",
     lokasiToko: reseller?.lokasiToko || "",
     jenisReseller: normalizeJenisReseller(reseller?.jenisReseller),
+    omset: reseller?.omset || "",
   };
 }
 

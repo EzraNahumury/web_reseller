@@ -45,6 +45,16 @@ Script sudah memakai Spreadsheet ID:
 
 Default `SHEET_NAME` adalah `Form Responses 1`. Ubah di `Code.gs` jika nama sheet berbeda.
 
+Header kolom reseller yang dipakai Apps Script (minimal):
+
+- `Nama Lengkap`
+- `Status Reseller Ayres`
+- `Nomor Telepon / WhatsApp` (atau variasi `Nomor Whatsapp`)
+- `Alamat Lengkap`
+- `Lokasi Toko (Jika Ada)`
+- `Jenis Reseller`
+- `Omset` (atau variasinya seperti `Omset (Rp)`)
+
 ## Setup Google Apps Script Admin (Sheet Berbeda)
 
 1. Buat project Apps Script admin terpisah.

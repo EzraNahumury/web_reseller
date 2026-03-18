@@ -53,6 +53,7 @@ export default function ResellerTable({
         item.alamatLengkap,
         item.lokasiToko,
         item.jenisReseller,
+        item.omset,
       ]
         .map((value) => String(value || "").toLowerCase())
         .join(" ");
@@ -113,6 +114,7 @@ export default function ResellerTable({
                 <th className="px-4 py-3 font-semibold">Alamat Lengkap</th>
                 <th className="px-4 py-3 font-semibold">Lokasi Toko</th>
                 <th className="px-4 py-3 font-semibold">Jenis Reseller</th>
+                <th className="px-4 py-3 font-semibold">Omset</th>
                 <th className="px-4 py-3 font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -120,7 +122,7 @@ export default function ResellerTable({
               {isLoading ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Mengambil data reseller...
@@ -129,7 +131,7 @@ export default function ResellerTable({
               ) : filteredResellers.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-10 text-center text-sm text-zinc-500"
                   >
                     Data reseller tidak ditemukan.
@@ -149,6 +151,7 @@ export default function ResellerTable({
                     <td className="px-4 py-3">{item.alamatLengkap || "-"}</td>
                     <td className="px-4 py-3">{item.lokasiToko || "-"}</td>
                     <td className="px-4 py-3">{item.jenisReseller || "-"}</td>
+                    <td className="px-4 py-3">{item.omset || "-"}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button

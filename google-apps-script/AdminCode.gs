@@ -23,96 +23,8 @@ const ADMIN_HEADERS = [
 
 const BENEFIT_HEADERS = ["Benefit"];
 
-function doGet(e) {
-  try {
-    const action = getAction_(e);
-
-    if (action === "admin-list") {
-      return toJson_({
-        success: true,
-        message: "Berhasil mengambil data admin.",
-        data: getAdminRows_(),
-      });
-    }
-
-    if (action === "admin-benefits") {
-      return toJson_({
-        success: true,
-        message: "Berhasil mengambil daftar benefit.",
-        data: getBenefitList_(),
-      });
-    }
-
-    return toJson_({
-      success: false,
-      message: `Endpoint GET tidak ditemukan: ${action || "/"}`,
-    });
-  } catch (error) {
-    return toJson_({
-      success: false,
-      message: error.message,
-    });
-  }
-}
-
-function doPost(e) {
-  try {
-    const action = getAction_(e);
-    const payload = getPayload_(e);
-
-    if (action === "admin-create") {
-      createAdminRow_(payload);
-      return toJson_({
-        success: true,
-        message: "Data admin berhasil disimpan.",
-      });
-    }
-
-    if (action === "admin-update") {
-      updateAdminRow_(payload);
-      return toJson_({
-        success: true,
-        message: "Data admin berhasil diupdate.",
-      });
-    }
-
-    if (action === "admin-delete") {
-      deleteAdminRow_(payload);
-      return toJson_({
-        success: true,
-        message: "Data admin berhasil dihapus.",
-      });
-    }
-
-    if (action === "admin-benefit-add") {
-      addBenefit_(payload);
-      return toJson_({
-        success: true,
-        message: "Benefit berhasil ditambahkan.",
-        data: getBenefitList_(),
-      });
-    }
-
-    if (action === "admin-benefit-delete") {
-      deleteBenefit_(payload);
-      return toJson_({
-        success: true,
-        message: "Benefit berhasil dihapus.",
-        data: getBenefitList_(),
-      });
-    }
-
-    return toJson_({
-      success: false,
-      message: `Endpoint POST tidak ditemukan: ${action || "/"}`,
-    });
-  } catch (error) {
-    return toJson_({
-      success: false,
-      message: error.message,
-    });
-  }
-}
+// Admin API handlers are routed through the main doGet/doPost in Code.gs.
+// This file contains only helper functions for the admin feature set.
 
 function createAdminRow_(payload) {
   const listReseller = String(payload.listReseller || "").trim();
@@ -427,29 +339,6 @@ function ensureHeaderRow_(sheet, headers) {
   }
 }
 
-function getAction_(e) {
-  const pathInfo = e && e.pathInfo ? String(e.pathInfo) : "";
-  const queryAction =
-    e && e.parameter && e.parameter.action ? String(e.parameter.action) : "";
-  const routeSource = pathInfo || queryAction;
 
-  return routeSource.replace(/^\/+|\/+$/g, "");
-}
 
-function getPayload_(e) {
-  if (!e || !e.postData || !e.postData.contents) {
-    return {};
-  }
 
-  try {
-    return JSON.parse(e.postData.contents);
-  } catch (error) {
-    throw new Error("Body request harus berupa JSON valid.");
-  }
-}
-
-function toJson_(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
-    ContentService.MimeType.JSON,
-  );
-}

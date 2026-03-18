@@ -1,5 +1,6 @@
 const SPREADSHEET_ID = "1vgYfhR9XdC6_me_9eM0GIk1QoLJTw-hFu5dhMyS2m0w";
 const SHEET_NAME = "Form Responses 1";
+const SCRIPT_VERSION = "v2";
 
 const FIELD_MAP = [
   { header: "Nama Lengkap", key: "namaLengkap" },
@@ -8,17 +9,46 @@ const FIELD_MAP = [
   { header: "Alamat Lengkap", key: "alamatLengkap" },
   { header: "Lokasi Toko (Jika Ada)", key: "lokasiToko" },
   { header: "Jenis Reseller", key: "jenisReseller" },
+  { header: "Omset", key: "omset" },
 ];
 
 function doGet(e) {
   try {
     const route = getRoute_(e);
 
+    if (route === "/ping") {
+      return toJson_({
+        success: true,
+        message: "pong",
+        data: {
+          route,
+          version: SCRIPT_VERSION,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+
     if (route === "/resellers") {
       return toJson_({
         success: true,
         message: "Berhasil mengambil data reseller.",
         data: getResellers_(),
+      });
+    }
+
+    if (route === "/admin-list") {
+      return toJson_({
+        success: true,
+        message: "Berhasil mengambil data admin.",
+        data: getAdminRows_(),
+      });
+    }
+
+    if (route === "/admin-benefits") {
+      return toJson_({
+        success: true,
+        message: "Berhasil mengambil daftar benefit.",
+        data: getBenefitList_(),
       });
     }
 
@@ -55,6 +85,48 @@ function doPost(e) {
       });
     }
 
+    if (route === "/admin-create") {
+      createAdminRow_(payload);
+      return toJson_({
+        success: true,
+        message: "Data admin berhasil disimpan.",
+      });
+    }
+
+    if (route === "/admin-update") {
+      updateAdminRow_(payload);
+      return toJson_({
+        success: true,
+        message: "Data admin berhasil diupdate.",
+      });
+    }
+
+    if (route === "/admin-delete") {
+      deleteAdminRow_(payload);
+      return toJson_({
+        success: true,
+        message: "Data admin berhasil dihapus.",
+      });
+    }
+
+    if (route === "/admin-benefit-add") {
+      addBenefit_(payload);
+      return toJson_({
+        success: true,
+        message: "Benefit berhasil ditambahkan.",
+        data: getBenefitList_(),
+      });
+    }
+
+    if (route === "/admin-benefit-delete") {
+      deleteBenefit_(payload);
+      return toJson_({
+        success: true,
+        message: "Benefit berhasil dihapus.",
+        data: getBenefitList_(),
+      });
+    }
+
     return toJson_({
       success: false,
       message: `Endpoint POST tidak ditemukan: ${route}`,
@@ -77,7 +149,7 @@ function getResellers_() {
   }
 
   const headerRow = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
-  const headerMap = makeHeaderMap_(headerRow);
+  const headerMap = ensureFieldHeaders_(sheet, headerRow);
   const rows = sheet.getRange(2, 1, lastRow - 1, lastColumn).getValues();
 
   return rows.map((row, rowOffset) => {
@@ -86,7 +158,7 @@ function getResellers_() {
     };
 
     FIELD_MAP.forEach((field) => {
-      const headerIndex = headerMap[field.header];
+      const headerIndex = headerMap[normalizeHeaderKey_(field.header)];
       item[field.key] =
         headerIndex === undefined ? "" : String(row[headerIndex] || "").trim();
     });
@@ -110,11 +182,11 @@ function editReseller_(payload) {
   }
 
   const headerRow = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
-  const headerMap = makeHeaderMap_(headerRow);
+  const headerMap = ensureFieldHeaders_(sheet, headerRow);
   const currentRow = sheet.getRange(rowIndex, 1, 1, lastColumn).getValues()[0];
 
   FIELD_MAP.forEach((field) => {
-    const headerIndex = headerMap[field.header];
+    const headerIndex = headerMap[normalizeHeaderKey_(field.header)];
     if (headerIndex === undefined) {
       return;
     }
@@ -156,15 +228,44 @@ function getSheet_() {
   return sheet;
 }
 
+function normalizeHeaderKey_(name) {
+  return String(name || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\(.*?\)/g, "") // remove parentheses content, e.g. "Omset (Rp)"
+    .replace(/\s+/g, " ")
+    .replace(/[^a-z0-9 ]/g, "");
+}
+
 function makeHeaderMap_(headerRow) {
   const map = {};
   headerRow.forEach((name, index) => {
-    const key = String(name || "").trim();
+    const key = normalizeHeaderKey_(name);
     if (key) {
       map[key] = index;
     }
   });
   return map;
+}
+
+function ensureFieldHeaders_(sheet, headerRow) {
+  const headerMap = makeHeaderMap_(headerRow);
+  let updated = false;
+
+  FIELD_MAP.forEach((field) => {
+    const normalized = normalizeHeaderKey_(field.header);
+    if (!(normalized in headerMap)) {
+      headerRow.push(field.header);
+      headerMap[normalized] = headerRow.length - 1;
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    sheet.getRange(1, 1, 1, headerRow.length).setValues([headerRow]);
+  }
+
+  return headerMap;
 }
 
 function getRoute_(e) {
@@ -193,7 +294,12 @@ function getPayload_(e) {
 }
 
 function toJson_(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
+  const payload =
+    data && typeof data === "object" && !Array.isArray(data)
+      ? { version: SCRIPT_VERSION, ...data }
+      : data;
+
+  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
     ContentService.MimeType.JSON,
   );
 }
