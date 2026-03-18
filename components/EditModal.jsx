@@ -24,12 +24,24 @@ const FIELD_CONFIG = [
     required: true,
   },
   { id: "lokasiToko", label: "Lokasi Toko (Jika Ada)", type: "text" },
+  { id: "jaringanPasar", label: "Jaringan Pasar", type: "text" },
   {
     id: "jenisReseller",
     label: "Jenis Reseller",
     type: "select",
     options: ["Online", "Offline", "Online dan Offline"],
     required: true,
+  },
+  { id: "akunInstagramUsaha", label: "Akun Instagram Usaha", type: "text" },
+  {
+    id: "pengalamanBerjualanJersey",
+    label: "Pengalaman berjualan jersey",
+    type: "text",
+  },
+  {
+    id: "pengalamanResellerAyres",
+    label: "Pengalaman sebagai reseller Ayres",
+    type: "text",
   },
   { id: "omset", label: "Omset", type: "text" },
 ];
@@ -73,7 +85,11 @@ function mapResellerToForm(reseller) {
     nomorWhatsapp: reseller?.nomorWhatsapp || "",
     alamatLengkap: reseller?.alamatLengkap || "",
     lokasiToko: reseller?.lokasiToko || "",
+    jaringanPasar: reseller?.jaringanPasar || "",
     jenisReseller: normalizeJenisReseller(reseller?.jenisReseller),
+    akunInstagramUsaha: reseller?.akunInstagramUsaha || "",
+    pengalamanBerjualanJersey: reseller?.pengalamanBerjualanJersey || "",
+    pengalamanResellerAyres: reseller?.pengalamanResellerAyres || "",
     omset: reseller?.omset || "",
   };
 }

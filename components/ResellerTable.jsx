@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import ResellerViewModal from "./ResellerViewModal";
 
 const STATUS_FILTERS = [
   { key: "all", label: "All" },
@@ -25,11 +26,13 @@ export default function ResellerTable({
   resellers,
   isLoading,
   deletingRowIndex,
+  onView,
   onEdit,
   onDelete,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [viewReseller, setViewReseller] = useState(null);
 
   const filteredResellers = useMemo(() => {
     const keyword = String(searchTerm || "").trim().toLowerCase();
@@ -156,6 +159,32 @@ export default function ResellerTable({
                       <div className="flex gap-2">
                         <button
                           type="button"
+                          onClick={() => {
+                            setViewReseller(item);
+                            if (onView) onView(item);
+                          }}
+                          aria-label="View data reseller"
+                          title="View"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200 text-zinc-700 transition hover:bg-zinc-300"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            className="h-4 w-4"
+                          >
+                            <path
+                              d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => onEdit(item)}
                           aria-label="Update data reseller"
                           title="Update"
@@ -240,6 +269,12 @@ export default function ResellerTable({
           </table>
         </div>
       </div>
+      {viewReseller ? (
+        <ResellerViewModal
+          reseller={viewReseller}
+          onClose={() => setViewReseller(null)}
+        />
+      ) : null}
     </section>
   );
 }

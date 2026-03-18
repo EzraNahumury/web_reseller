@@ -7,6 +7,7 @@ import ResellerTable from "@/components/ResellerTable";
 import ResellerStatusChart from "@/components/ResellerStatusChart";
 import ResellerJenisChart from "@/components/ResellerJenisChart";
 import EditModal from "@/components/EditModal";
+import ResellerViewModal from "@/components/ResellerViewModal";
 import AdminMenuForm from "@/components/AdminMenuForm";
 import BenefitManager from "@/components/BenefitManager";
 import AdminDataTable from "@/components/AdminDataTable";
@@ -34,6 +35,7 @@ export default function DashboardPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [resellers, setResellers] = useState([]);
   const [selectedReseller, setSelectedReseller] = useState(null);
+  const [selectedResellerView, setSelectedResellerView] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [deletingRowIndex, setDeletingRowIndex] = useState(null);
   const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
@@ -358,6 +360,7 @@ export default function DashboardPage() {
               resellers={resellers}
               isLoading={isLoading}
               deletingRowIndex={deletingRowIndex}
+              onView={setSelectedResellerView}
               onEdit={setSelectedReseller}
               onDelete={handleDelete}
             />
@@ -419,6 +422,13 @@ export default function DashboardPage() {
           isSaving={isSaving}
           onClose={() => setSelectedReseller(null)}
           onSave={handleEditSave}
+        />
+      ) : null}
+
+      {selectedResellerView ? (
+        <ResellerViewModal
+          reseller={selectedResellerView}
+          onClose={() => setSelectedResellerView(null)}
         />
       ) : null}
     </main>
